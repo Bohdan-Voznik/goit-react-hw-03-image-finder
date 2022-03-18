@@ -49,7 +49,7 @@ export class ImageGallery extends Component {
         return;
       }
 
-      if (imagesApiService.hits >= totalHits) {
+      if (imagesApiService.hits >= totalHits && imagesApiService.page !== 2) {
         this.props.notify(
           'warning',
           'We`re sorry, but you`ve reached the end of search results.'
