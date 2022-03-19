@@ -11,6 +11,11 @@ import { Button } from 'components/Button/Button';
 const imagesApiService = new ImagesApiService();
 
 export class ImageGallery extends Component {
+  static propTypes = {
+    serchTag: PropTypes.string.isRequired,
+    onItemlick: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired,
+  };
   state = {
     images: [],
     totalImages: null,
@@ -129,9 +134,3 @@ export class ImageGallery extends Component {
     }
   }
 }
-
-ImageGallery.propTypes = {
-  serchTag: PropTypes.string.isRequired,
-  onItemlick: PropTypes.func.isRequired,
-  notify: PropTypes.func.isRequired,
-};
