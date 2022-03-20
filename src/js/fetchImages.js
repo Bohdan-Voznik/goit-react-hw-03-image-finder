@@ -14,7 +14,7 @@ export default class ImagesApiService {
         key: '25151398-d1679d24a13d5d70733aed927',
         q: this.searchTag,
         image_type: 'photo',
-        per_page: 14,
+        per_page: 12,
         page: this.page,
         orientation: 'horizontal',
         safesearch: true,
@@ -28,7 +28,7 @@ export default class ImagesApiService {
   }
 
   incrementHits() {
-    this.hits = this.page * 14;
+    this.hits = this.page * 12;
   }
 
   incrementPage() {
