@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export class App extends Component {
   state = {
-    serchTag: null,
+    serchTag: '',
     modalImg: null,
   };
 
@@ -30,38 +30,28 @@ export class App extends Component {
   };
 
   notify = (type, text) => {
+    const options = {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+    };
+
     if (type === 'error') {
-      toast.error(text, {
-        position: 'top-right',
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(text, options);
     }
     if (type === 'success') {
-      toast.success(text, {
-        position: 'top-right',
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.success(text, options);
     }
     if (type === 'warning') {
-      toast.warn(text, {
-        position: 'top-right',
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.warn(text, options);
+    }
+    if (type === 'info') {
+      toast.info(text, options);
     }
   };
 
@@ -70,20 +60,21 @@ export class App extends Component {
       <>
         <Header>
           <Container>
-            <Searchbar onSerchSubmit={this.handleFormSubmit} />
+            <Searchbar
+              onSerchSubmit={this.handleFormSubmit}
+              notify={this.notify}
+            />
           </Container>
         </Header>
-        {this.serchTag !== null && (
-          <Container>
-            <Wrapper>
-              <ImageGallery
-                serchTag={this.state.serchTag}
-                onItemlick={this.togleModal}
-                notify={this.notify}
-              />
-            </Wrapper>
-          </Container>
-        )}
+        <Container>
+          <Wrapper>
+            <ImageGallery
+              serchTag={this.state.serchTag}
+              onItemlick={this.togleModal}
+              notify={this.notify}
+            />
+          </Wrapper>
+        </Container>
         <ToastContainer
           position="top-right"
           autoClose={5000}

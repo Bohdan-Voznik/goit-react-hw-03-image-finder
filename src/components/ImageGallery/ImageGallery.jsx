@@ -28,9 +28,7 @@ export class ImageGallery extends Component {
 
     if (prevTag !== newtag) {
       this.setState({ images: [] });
-
-      imagesApiService.resetSerch(this.props.serchTag);
-
+      imagesApiService.resetSerch(newtag);
       this.loadImages();
     }
   }

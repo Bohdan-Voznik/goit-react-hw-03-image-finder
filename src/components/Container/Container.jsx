@@ -7,5 +7,5 @@ export const Container = ({ children }) => {
 };
 
 Container.propTypes = {
-  children: PropTypes.oneOf([PropTypes.element, PropTypes.node]),
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]),
 };

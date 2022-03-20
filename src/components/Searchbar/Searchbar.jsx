@@ -22,7 +22,7 @@ export class Searchbar extends Component {
     e.preventDefault();
     const tag = this.state.tag.trim();
     if (tag === '') {
-      alert('lol');
+      this.props.notify('info', 'Please, enter a tag to search!');
       return;
     }
     this.props.onSerchSubmit(tag);
