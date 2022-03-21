@@ -1,19 +1,81 @@
 import { Component } from 'react';
 
-import { Header, Wrapper } from './App.styled';
-
-import { Container } from 'components/Container/Container';
-import { Searchbar } from 'components/Searchbar/Searchbar';
-import { ImageGallery } from 'components/ImageGallery/ImageGallery';
-import { Modal } from 'components/Modal/Modal';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { Container, Header, Wrapper, Text } from './App.styled';
+import { fetchImagesByTag } from '../../js/fetchImages';
+
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Loader } from 'components/Loader/Loader';
+import { Button } from 'components/Button/Button';
+import { Modal } from 'components/Modal/Modal';
 
 export class App extends Component {
   state = {
     serchTag: '',
+    images: [],
+    page: 1,
+    pages: null,
     modalImg: null,
+    loading: false,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const prevTag = prevState.serchTag;
+    const newtag = this.state.serchTag;
+    const prevPage = prevState.page;
+    const newPage = this.state.page;
+
+    if (prevTag !== newtag) {
+      this.setState({ images: [], page: 1, pages: null });
+      this.loadImages();
+    }
+
+    if (prevPage !== newPage && newPage !== 1) {
+      this.loadImages();
+    }
+  }
+
+  loadImages = () => {
+    const { serchTag, page } = this.state;
+    this.setState({ loading: true });
+
+    setTimeout(() => {
+      fetchImagesByTag(serchTag, page)
+        .then(({ hits, totalHits, totalPages }) => {
+          if (!hits.length) {
+            throw new Error(
+              'Sorry, there are no images matching your search query . Please try again.'
+            );
+          }
+
+          this.notify('success', `Hooray! We found ${totalHits} images.`);
+          this.setState(prevState => {
+            return {
+              images: [...prevState.images, ...hits],
+              pages: totalPages,
+              status: 'resolved',
+            };
+          });
+        })
+        .catch(error => {
+          this.setState({ status: 'idle' });
+          this.notify('error', error.message);
+        })
+        .finally(() => {
+          this.setState({ loading: false });
+        });
+    }, 2000);
+  };
+
+  loadMore = () => {
+    this.setState(prevState => {
+      return {
+        page: prevState.page + 1,
+      };
+    });
   };
 
   handleFormSubmit = serchTag => {
@@ -56,6 +118,12 @@ export class App extends Component {
   };
 
   render() {
+    const { images, loading, page, pages } = this.state;
+
+    const isStartSearch = Boolean(images.length);
+    const isNotStartSearch = !isStartSearch && !loading;
+    const isShowLoadMore = !loading && page < pages;
+
     return (
       <>
         <Header>
@@ -68,11 +136,29 @@ export class App extends Component {
         </Header>
         <Container>
           <Wrapper>
-            <ImageGallery
-              serchTag={this.state.serchTag}
-              onItemlick={this.togleModal}
-              notify={this.notify}
-            />
+            {isNotStartSearch && (
+              <Text>
+                Hey! We'll be happy to help you find the image you need.
+              </Text>
+            )}
+            {isStartSearch && (
+              <ImageGallery
+                images={this.state.images}
+                onItemlick={this.togleModal}
+              />
+            )}
+            {isShowLoadMore && (
+              <Button
+                text="Load more..."
+                disabled={false}
+                onClick={this.loadMore}
+              />
+            )}
+            {loading && (
+              <Button text="Loading..." disabled={true}>
+                <Loader />
+              </Button>
+            )}
           </Wrapper>
         </Container>
         <ToastContainer
