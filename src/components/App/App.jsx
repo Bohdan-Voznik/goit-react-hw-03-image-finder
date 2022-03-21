@@ -42,32 +42,30 @@ export class App extends Component {
     const { serchTag, page } = this.state;
     this.setState({ loading: true });
 
-    setTimeout(() => {
-      fetchImagesByTag(serchTag, page)
-        .then(({ hits, totalHits, totalPages }) => {
-          if (!hits.length) {
-            throw new Error(
-              'Sorry, there are no images matching your search query . Please try again.'
-            );
-          }
+    fetchImagesByTag(serchTag, page)
+      .then(({ hits, totalHits, totalPages }) => {
+        if (!hits.length) {
+          throw new Error(
+            'Sorry, there are no images matching your search query . Please try again.'
+          );
+        }
 
-          this.notify('success', `Hooray! We found ${totalHits} images.`);
-          this.setState(prevState => {
-            return {
-              images: [...prevState.images, ...hits],
-              pages: totalPages,
-              status: 'resolved',
-            };
-          });
-        })
-        .catch(error => {
-          this.setState({ status: 'idle' });
-          this.notify('error', error.message);
-        })
-        .finally(() => {
-          this.setState({ loading: false });
+        this.notify('success', `Hooray! We found ${totalHits} images.`);
+        this.setState(prevState => {
+          return {
+            images: [...prevState.images, ...hits],
+            pages: totalPages,
+            status: 'resolved',
+          };
         });
-    }, 2000);
+      })
+      .catch(error => {
+        this.setState({ status: 'idle' });
+        this.notify('error', error.message);
+      })
+      .finally(() => {
+        this.setState({ loading: false });
+      });
   };
 
   loadMore = () => {
