@@ -18,5 +18,18 @@ export const fetchImagesByTag = async (tag, page) => {
   const { hits, totalHits } = serchResult.data;
   const totalPages = Math.ceil(totalHits / options.params.per_page);
 
-  return { hits, totalPages, totalHits };
+  const resultHits = hits.map(hit => {
+    return {
+      id: hit.id,
+      webformatURL: hit.webformatURL,
+      largeImageURL: hit.largeImageURL,
+      tags: hit.tags,
+      likes: hit.likes,
+      views: hit.views,
+      comments: hit.comments,
+      downloads: hit.downloads,
+    };
+  });
+
+  return { hits: resultHits, totalPages, totalHits };
 };
