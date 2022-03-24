@@ -27,7 +27,7 @@ export const ImageGallery = ({ images, onItemlick }) => {
               likes={likes}
               views={views}
               comments={comments}
-              dowloads={downloads}
+              downloads={downloads}
               onItemlick={onItemlick}
             />
           );
@@ -40,14 +40,14 @@ export const ImageGallery = ({ images, onItemlick }) => {
 ImageGallery.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.exact({
-      prewImg: PropTypes.string.isRequired,
-      largeImg: PropTypes.string.isRequired,
-      alt: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
       likes: PropTypes.number.isRequired,
       views: PropTypes.number.isRequired,
       comments: PropTypes.number.isRequired,
-      dowloads: PropTypes.number.isRequired,
-      onItemlick: PropTypes.func.isRequired,
+      downloads: PropTypes.number.isRequired,
     })
   ).isRequired,
   onItemlick: PropTypes.func.isRequired,

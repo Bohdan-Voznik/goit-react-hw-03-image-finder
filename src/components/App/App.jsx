@@ -39,7 +39,7 @@ export class App extends Component {
   }
 
   loadImages = () => {
-    const { serchTag, page } = this.state;
+    const { serchTag, page, pages } = this.state;
     this.setState({ loading: true });
 
     fetchImagesByTag(serchTag, page)
@@ -50,7 +50,17 @@ export class App extends Component {
           );
         }
 
-        this.notify('success', `Hooray! We found ${totalHits} images.`);
+        if (page === 1) {
+          this.notify('success', `Hooray! We found ${totalHits} images.`);
+        }
+
+        if (page === pages) {
+          this.notify(
+            'warning',
+            `We're sorry, but you've reached the end of search results.`
+          );
+        }
+
         this.setState(prevState => {
           return {
             images: [...prevState.images, ...hits],

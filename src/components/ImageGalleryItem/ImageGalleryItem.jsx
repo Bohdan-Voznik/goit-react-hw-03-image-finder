@@ -13,7 +13,7 @@ export const ImageGalleryItem = ({
   likes,
   views,
   comments,
-  dowloads,
+  downloads,
   onItemlick,
 }) => {
   return (
@@ -38,7 +38,7 @@ export const ImageGalleryItem = ({
         <ImageInfoItem>
           <b>Downloads</b>
           <br />
-          <span>{dowloads}</span>
+          <span>{downloads}</span>
         </ImageInfoItem>
       </ImageInfo>
     </ImageItem>
@@ -52,6 +52,6 @@ ImageGalleryItem.propTypes = {
   likes: PropTypes.number.isRequired,
   views: PropTypes.number.isRequired,
   comments: PropTypes.number.isRequired,
-  dowloads: PropTypes.number.isRequired,
+  downloads: PropTypes.number.isRequired,
   onItemlick: PropTypes.func.isRequired,
 };

@@ -7,7 +7,10 @@ import { Overlay, Image } from './Modal.styled';
 const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends Component {
-static propTypes = { bar: PropTypes.string };
+  static propTypes = {
+    img: PropTypes.string.isRequired,
+    onClose: PropTypes.func.isRequired,
+  };
 
   componentDidMount() {
     window.addEventListener('keydown', this.onEscClick);
@@ -38,8 +41,3 @@ static propTypes = { bar: PropTypes.string };
     );
   }
 }
-
-Modal.propTypes = {
-  img: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
-};
