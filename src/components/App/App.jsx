@@ -65,12 +65,10 @@ export class App extends Component {
           return {
             images: [...prevState.images, ...hits],
             pages: totalPages,
-            status: 'resolved',
-          };
+           };
         });
       })
       .catch(error => {
-        this.setState({ status: 'idle' });
         this.notify('error', error.message);
       })
       .finally(() => {
