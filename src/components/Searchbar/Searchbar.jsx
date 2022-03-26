@@ -23,7 +23,7 @@ export class Searchbar extends Component {
 
   handleFormSubmit = e => {
     e.preventDefault();
-    const tag = this.state.tag.trim();
+    const tag = this.state.tag.trim().toLowerCase();
     if (tag === '') {
       this.props.notify('info', 'Please, enter a tag to search!');
       return;

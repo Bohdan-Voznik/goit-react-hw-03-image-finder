@@ -27,53 +27,44 @@ export class App extends Component {
     const prevPage = prevState.page;
     const newPage = this.state.page;
 
-    if (prevTag !== newtag) {
-      this.setState({ images: [], page: 1, pages: null });
-      this.loadImages();
-    }
+    if (prevTag !== newtag || (prevPage !== newPage && newPage !== 1)) {
+      const { serchTag, page, pages } = this.state;
+      this.setState({ loading: true });
 
-    if (prevPage !== newPage && newPage !== 1) {
-      this.loadImages();
+      fetchImagesByTag(serchTag, page)
+        .then(({ hits, totalHits, totalPages }) => {
+          if (!hits.length) {
+            throw new Error(
+              'Sorry, there are no images matching your search query . Please try again.'
+            );
+          }
+
+          if (page === 1) {
+            this.notify('success', `Hooray! We found ${totalHits} images.`);
+          }
+
+          if (page === pages) {
+            this.notify(
+              'warning',
+              `We're sorry, but you've reached the end of search results.`
+            );
+          }
+
+          this.setState(prevState => {
+            return {
+              images: [...prevState.images, ...hits],
+              pages: totalPages,
+            };
+          });
+        })
+        .catch(error => {
+          this.notify('error', error.message);
+        })
+        .finally(() => {
+          this.setState({ loading: false });
+        });
     }
   }
-
-  loadImages = () => {
-    const { serchTag, page, pages } = this.state;
-    this.setState({ loading: true });
-
-    fetchImagesByTag(serchTag, page)
-      .then(({ hits, totalHits, totalPages }) => {
-        if (!hits.length) {
-          throw new Error(
-            'Sorry, there are no images matching your search query . Please try again.'
-          );
-        }
-
-        if (page === 1) {
-          this.notify('success', `Hooray! We found ${totalHits} images.`);
-        }
-
-        if (page === pages) {
-          this.notify(
-            'warning',
-            `We're sorry, but you've reached the end of search results.`
-          );
-        }
-
-        this.setState(prevState => {
-          return {
-            images: [...prevState.images, ...hits],
-            pages: totalPages,
-          };
-        });
-      })
-      .catch(error => {
-        this.notify('error', error.message);
-      })
-      .finally(() => {
-        this.setState({ loading: false });
-      });
-  };
 
   loadMore = () => {
     this.setState(prevState => {
@@ -84,16 +75,15 @@ export class App extends Component {
   };
 
   handleFormSubmit = serchTag => {
-    this.setState({ serchTag });
+    if (serchTag === this.state.serchTag) {
+      this.notify('info', 'Please, enter another tag for your search.');
+      return;
+    }
+    this.setState({ serchTag, images: [], page: 1, pages: null });
   };
 
   togleModal = (img = false) => {
-    this.setState(prevState => {
-      return {
-        ...prevState,
-        modalImg: img,
-      };
-    });
+    this.setState({ modalImg: img });
   };
 
   notify = (type, text) => {
